@@ -111,6 +111,11 @@ namespace RipperStoreAutoInstaller
                     Console.ReadKey();
                 }
             }
+            else
+            {
+                MessageBox.Show("Invalid .exe detected, Please select your 'VRChat.exe'", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                FileDialog();
+            }
         }
     }
 }
