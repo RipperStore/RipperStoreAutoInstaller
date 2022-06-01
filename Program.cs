@@ -28,16 +28,22 @@ namespace RipperStoreAutoInstaller
                     var alt = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Valve\Steam", "SteamPath", null);
                     if (alt == null)
                     {
-                        MessageBox.Show("Could not find VRChat install path automatically. Please select the path manually.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Console.WriteLine("Failed to find VRChat install path. (Method 2)");
+                        Console.WriteLine("Attempting to find VRChat install path... (Method 4)");
+                        var alt_2 = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 438100", "InstallLocation", null);
+                        if (alt_2 == null)
+                        {
+                            MessageBox.Show("Could not find VRChat install path automatically. Please select the path manually.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                        FileDialog();
+                            FileDialog();
+                        }
+                        else steamPath = alt_2.ToString();
                     }
                     else steamPath = alt.ToString();
                 }
                 else steamPath = b64.ToString();
             }
             else steamPath = b32.ToString();
-
 
             if (!string.IsNullOrEmpty(steamPath))
             {
@@ -102,6 +108,13 @@ namespace RipperStoreAutoInstaller
 
                     try { Console.WriteLine("Removing MelonLoader Temp files..."); ; File.Delete(fi.Directory.FullName + "\\MelonLoader.x64.zip"); } catch { }
 
+                    try
+                    {
+                        //Just in case this is used for a reinstall
+                        File.Delete(fi.Directory.FullName + "\\RipperStoreCredits.txt");
+                        File.Delete(fi.Directory.FullName + "\\RipperStoreExternal.exe");
+                    }
+                    catch { }
 
                     Console.WriteLine("Downloading Mod...");
                     Directory.CreateDirectory(fi.Directory.FullName + "\\Mods");
